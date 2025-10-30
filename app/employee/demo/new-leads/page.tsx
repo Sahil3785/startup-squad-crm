@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+export const dynamic = 'force-dynamic';
+
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { LeadsTable } from "@/components/employee/LeadsTable";
@@ -25,7 +27,7 @@ interface Lead {
   assigned_to?: string;
 }
 
-export default function DemoNewLeadsPage() {
+function NewLeadsContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -126,6 +128,14 @@ export default function DemoNewLeadsPage() {
         <LeadsTable leads={leads} />
       </div>
     </div>
+  );
+}
+
+export default function DemoNewLeadsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background p-6">Loading…</div>}>
+      <NewLeadsContent />
+    </Suspense>
   );
 }
 

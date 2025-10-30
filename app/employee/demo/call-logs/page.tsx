@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+// Disable static prerendering to avoid Suspense requirement for search params
+export const dynamic = 'force-dynamic';
+
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { CallSummaryCard } from "@/components/employee/CallSummaryCard";
@@ -23,7 +26,7 @@ interface CallLog {
   employee?: string;
 }
 
-export default function DemoCallLogsPage() {
+function CallLogsContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const [allCalls, setAllCalls] = useState<CallLog[]>([]);
@@ -161,6 +164,14 @@ export default function DemoCallLogsPage() {
         </Tabs>
       </div>
     </div>
+  );
+}
+
+export default function DemoCallLogsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background p-6">Loading…</div>}>
+      <CallLogsContent />
+    </Suspense>
   );
 }
 

@@ -68,6 +68,16 @@ export const PERMISSIONS: Permission[] = [
   { id: 'tasks.edit', name: 'Edit Tasks', description: 'Modify task information', category: 'Tasks', icon: <div className="h-4 w-4" /> },
 ]
 
+// Group permissions by category for easy rendering in dialogs
+export const groupedPermissions: Record<string, Permission[]> = PERMISSIONS.reduce(
+  (acc: Record<string, Permission[]>, perm: Permission) => {
+    if (!acc[perm.category]) acc[perm.category] = [];
+    acc[perm.category].push(perm);
+    return acc;
+  },
+  {}
+);
+
 export const DEFAULT_ROLES: Role[] = [
   {
     id: 'admin',
